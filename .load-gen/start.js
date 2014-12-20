@@ -34,7 +34,7 @@ function sendRequest () {
 function genUser() {
   var userId = Math.ceil(Math.random() * RPS);
   if(userId == Math.ceil(RPS/2) + 2) {
-    return 'jhon@smith.com';
+    return 'john@smith.com';
   } else {
     return 'user_' + userId + '@email.com';
   }
@@ -43,7 +43,7 @@ function genUser() {
 function getHeartBeat() {
   var low = 80;
   var high = 120;
-  return low + Math.floor(Math.random() * high - low);
+  return low + Math.floor(Math.random() * (high - low));
 }
 
 setInterval(function() {

@@ -11,6 +11,7 @@ Meteor.methods({
         _id: {
           year: {$year: "$time"},
           month: {$month: "$time"},
+          date: {$dayOfMonth: "$time"},
           hour: {$hour: "$time"}, 
           minute: {$minute: "$time"}
         },
