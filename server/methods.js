@@ -2,26 +2,34 @@ Meteor.methods({
   getChartData: function(user) {
     this.unblock();
     var hourMillis = 1000 * 60 * 60;
-    var beforeOneHour = new Date(Date.now() - hourMillis);
-    var pipes = [
-      {$match: {
-        user: user,
-        time: {$gt: beforeOneHour}
-      }},
-      {$group: {
-        _id: {
-          year: {$year: "$time"},
-          month: {$month: "$time"},
-          date: {$dayOfMonth: "$time"},
-          hour: {$hour: "$time"}, 
-          minute: {$minute: "$time"}
-        },
-        heartBeat: {$avg: "$heartBeat"}
-      }},
-      {$sort: {"_id.hour": 1, "_id.minute": 1}}
-    ];
+    var thisHour = GetHour(new Date());
+    var lastHour = new Date(thisHour.getTime() - hourMillis);
+    
+    var results = [];
 
-    var result = Metrics.aggregate(pipes);
-    return result;
+    var thisHourDoc = Metrics.findOne({user: user, hour: thisHour});
+    var lastHourDoc = Metrics.findOne({user: user, hour: lastHour});
+    fillIntoResults(results, thisHourDoc, thisHour);
+    fillIntoResults(results, lastHourDoc, lastHour);
+
+    results.sort(function(a, b) {
+      return a.time - b.time;
+    });
+
+    return _.last(results, 60);
   }
 });
+
+
+function fillIntoResults (results, doc, hour) {
+  if(doc && doc.perMinSum) {
+    _.each(doc.perMinSum, function(sum, minute) {
+      var samples = doc.perMinSamples[minute];
+      var avg = sum/samples;
+      results.push({
+        time: hour.getTime() + (minute * 1000 * 60),
+        heartBeat: avg
+      });
+    });
+  }
+}

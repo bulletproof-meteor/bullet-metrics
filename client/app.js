@@ -4,9 +4,7 @@ GetData = function() {
 
     var chartData = getChartData();
     _.each(data, function(item) {
-      var dateString = item._id.month + "/" + item._id.date + "/" + item._id.year;
-      dateString += " " + item._id.hour + ":" + item._id.minute + " UTC";
-      var date = new Date(dateString);
+      var date = new Date(item.time);
 
       chartData.labels.push(date.getHours() + ":" + date.getMinutes());
       chartData.datasets[0].data.push(Math.ceil(item.heartBeat));
