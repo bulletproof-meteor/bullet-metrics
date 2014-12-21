@@ -22,6 +22,17 @@ Meteor.methods({
     ];
 
     var result = Metrics.aggregate(pipes);
+
+    //convert _id to a time
+    result.forEach(function(item) {
+      var dateString = item._id.month + "/" + item._id.date + "/" + item._id.year;
+      dateString += " " + item._id.hour + ":" + item._id.minute + " UTC";
+      var date = new Date(dateString);
+
+      delete item._id;
+      item.time = date.getTime();
+    });
+
     return result;
   }
 });
