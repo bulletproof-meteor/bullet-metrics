@@ -1,5 +1,6 @@
 Meteor.methods({
   getChartData: function(user) {
+    this.unblock();
     var hourMillis = 1000 * 60 * 60;
     var beforeOneHour = new Date(Date.now() - hourMillis);
     var pipes = [
