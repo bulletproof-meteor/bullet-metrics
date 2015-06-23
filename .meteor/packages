@@ -7,9 +7,6 @@ meteor-platform
 insecure
 meteorhacks:npm
 meteorhacks:picker
-meteorhacks:aggregations
-
-
-
+meteorhacks:aggregate
 npm-container
 meteorhacks:kadira
